@@ -1,30 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rakesh Pandit Portfolio</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secure Google Search</title>
 </head>
 <body>
-    <div class="portfolioContent">
-        <Header class="portfolioContent_Head">
-            <div class="Navbar"></div>
-            <div class="face"></div>
-        </Header>
-        <Section class="portfolioContent_Body">
-            <H1>Hello World</H1>
-            <p> This is My Portfolio Website </p>
+  <h1>Search Using Google Custom Search API</h1>
+  <input type="text" id="query" placeholder="Enter your search query">
+  <button onclick="search()">Search</button>
+  <div id="results"></div>
 
-              <div class="gallery-container">
-        <!-- Google Drive Image Display -->
-        <div class="gallery-item">
-            <img src="https://drive.google.com/uc?id=1yE8sOP3EZCLfe6_5z5g_NgdfDlxs-baV" alt="Image from Google Drive" style="width:300px;">
-            <p>Google Drive Image</p>
-        </div>
-              </div>
-        </Section>
+  <script>
+    async function search() {
+      const query = document.getElementById("query").value;
+      const scriptUrl = "https://script.google.com/macros/s/AKfycbz3h3DlAHKrJ3DP8RYGKQ5RYhqy5VeiSRvCOHORgAOm-kR5JvNVTuZ3DPyWVzctEUNssA/exec"; // Replace with your Apps Script URL
 
-        <footer class="portfolioContent_Footer"></footer>
-    </div>
+      try {
+        const response = await fetch(`${scriptUrl}?query=${encodeURIComponent(query)}`);
+        const data = await response.json();
+
+        const resultsDiv = document.getElementById("results");
+        resultsDiv.innerHTML = data.items
+          ? data.items
+              .map(
+                (item) =>
+                  `<div>
+                    <h3>${item.title}</h3>
+                    <p>${item.snippet}</p>
+                    <a href="${item.link}" target="_blank">Read more</a>
+                  </div>`
+              )
+              .join("")
+          : "<p>No results found</p>";
+      } catch (error) {
+        console.error(error);
+        document.getElementById("results").innerHTML = "<p>Something went wrong. Please try again later.</p>";
+      }
+    }
+  </script>
 </body>
 </html>
