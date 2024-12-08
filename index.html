@@ -50,13 +50,11 @@
                     </li>
                 </ul>
                 
-                <div>
-                    <form class="d-flex" id="searchForm">
-                      <input class="form-control" id="searchQuery" type="search" placeholder="Search" aria-label="Search">
-                      <button class="btn btn-outline-success text-white border-white" type="submit">Search</button>
-                    </form>
-                    <div id="results"></div>
-                </div>
+                <form id="searchForm">
+                    <input type="text" id="searchQuery" placeholder="Search..." required />
+                    <button type="submit">Search</button>
+                </form>
+                <div id="results" class="results"></div>
             </div>
         </div>
     </nav>
