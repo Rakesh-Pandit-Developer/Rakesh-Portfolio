@@ -19,60 +19,42 @@
 
 
 // ======================== Search =============================
-// Search form aur result div ko select karna
-const searchForm = document.getElementById("searchForm");
-const searchQueryInput = document.getElementById("searchQuery");
+const form = document.getElementById("searchForm");
 const resultsDiv = document.getElementById("results");
 
-// API Key aur Search Engine ID
-const API_KEY = "AIzaSyAK5xST4fi6AX8yO9PaIt4B8rRXzWnCkaU";
-const CX = "00a523c8478af499a"; // Search Engine ID
+form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const query = document.getElementById("searchQuery").value;
+    const apiUrl = `https://www.googleapis.com/customsearch/v1?key=AIzaSyAK5xST4fi6AX8yO9PaIt4B8rRXzWnCkaU&cx=00a523c8478af499a&q=${encodeURIComponent(query)}`;
 
-// Form submit event
-searchForm.addEventListener("submit", async (e) => {
-  e.preventDefault(); // Default form behavior ko rokna
-  const query = searchQueryInput.value; // User input
-  if (!query) {
-    alert("Please enter a search query");
-    return;
-  }
-
-  // API call
-  const url = `https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${CX}&q=${encodeURIComponent(query)}`;
-
-  try {
-    const response = await fetch(url);
-    const data = await response.json();
-    displayResults(data);
-  } catch (error) {
-    console.error("Error fetching search results:", error);
-    resultsDiv.innerHTML = `<p class="text-danger">Error fetching search results. Please try again later.</p>`;
-  }
+    try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+        }
+        const data = await response.json();
+        displayResults(data);
+    } catch (error) {
+        resultsDiv.innerHTML = `<p style="color: red;">Failed to fetch results: ${error.message}</p>`;
+    }
 });
 
-// Results display function
+// Function to display results
 function displayResults(data) {
-  if (!data.items || data.items.length === 0) {
-    resultsDiv.innerHTML = `<p class="text-warning">No results found for your query.</p>`;
-    return;
-  }
-
-  // Clear previous results
-  resultsDiv.innerHTML = "";
-
-  // Results ko display karna
-  data.items.forEach((item) => {
-    const resultItem = document.createElement("div");
-    resultItem.classList.add("mb-3");
-
-    // Result structure
-    resultItem.innerHTML = `
-      <h4><a href="${item.link}" target="_blank">${item.title}</a></h4>
-      <p>${item.snippet}</p>
-      <a href="${item.link}" target="_blank">${item.link}</a>
-    `;
-    resultsDiv.appendChild(resultItem);
-  });
+    resultsDiv.innerHTML = ''; // Clear previous results
+    if (data.items && data.items.length > 0) {
+        data.items.forEach(item => {
+            const resultItem = document.createElement('div');
+            resultItem.classList.add('result-item');
+            resultItem.innerHTML = `
+                <h3><a href="${item.link}" target="_blank">${item.title}</a></h3>
+                <p>${item.snippet}</p>
+            `;
+            resultsDiv.appendChild(resultItem);
+        });
+    } else {
+        resultsDiv.innerHTML = '<p>No results found.</p>';
+    }
 }
 
 
