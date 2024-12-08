@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Weather</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- FontAwesome for icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+  <style>
+    .collapse-box {
+      border: 2px solid #007bff;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+
+    .btn-collapse {
+      width: 100%;
+      padding: 15px;
+      font-size: 18px;
+      background-color: #007bff;
+      color: white;
+      text-align: left;
+      border: none;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-collapse.collapsed {
+      background-color: #dc3545;
+    }
+
+    .toggle-icon {
+      font-size: 18px;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .collapse-content {
+      padding: 20px;
+      background-color: #f8f9fa;
+      border-top: 1px solid #007bff;
+      border-radius: 0 0 5px 5px;
+    }
+
+    .weather-section {
+      margin-bottom: 20px;
+    }
+
+    .weather-title {
+      font-size: 20px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .weather-data {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .live-time {
+      text-align: center;
+      font-weight: bold;
+      color: #007bff;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container mt-5">
+    
+    <!-- Collapse Box -->
+    <div class="collapse-box">
+      <button class="btn-collapse" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWeather" aria-expanded="false" aria-controls="collapseWeather" id="toggleButton">
+        Live Weather
+        <i class="fas fa-chevron-down toggle-icon" id="toggle-icon"></i>
+      </button>
+
+      <div class="collapse overflow-hidden" id="collapseWeather">
+        <div class="row collapse-content d-flex">
+          <!-- Nepal Section -->
+          <div class="col-12 weather-section border bg-white mx-1 py-3">
+            <div class="weather-title">Nepal</div>
+            <div class="weather-data" id="weatherNepal">Loading Nepal weather...</div>
+            <div class="live-time" id="timeNepal">Fetching Nepal time...</div>
+          </div>
+
+          <!-- Jordan Section -->
+          <div class="col-12 weather-section border bg-white mx-1 py-3">
+            <div class="weather-title">Jordan</div>
+            <div class="weather-data" id="weatherJordan">Loading Jordan weather...</div>
+            <div class="live-time" id="timeJordan">Fetching Jordan time...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bootstrap 5 JS and Popper.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+  <script>
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbytxAcNGoWI8FsU-_tBHDvbE6B-XIRfoyiNg27xICZNZyGWYwQhGORLU_i-F3UhXEf9sA/exec';
+
+    // Function to fetch weather data
+    async function fetchWeather(city, elementId) {
+      try {
+        const response = await fetch(`${scriptUrl}?city=${city}`);
+        const data = await response.json();
+        if (data.error) {
+          document.getElementById(elementId).innerHTML = `Error: ${data.error}`;
+        } else {
+          document.getElementById(elementId).innerHTML = `
+            <p>Temperature: ${data.temperature}°C</p>
+            <p>Description: ${data.description}</p>
+            <p>Humidity: ${data.humidity}%</p>
+            <p>Wind Speed: ${data.windSpeed} m/s</p>
+          `;
+        }
+      } catch (error) {
+        document.getElementById(elementId).innerHTML = 'Error: Unable to fetch weather data.';
+      }
+    }
+
+    // Function to update live time for a specific timezone
+    function updateLiveTime(elementId, timezone) {
+      const now = new Date();
+      const localTime = now.toLocaleTimeString("en-US", { timeZone: timezone });
+      document.getElementById(elementId).innerText = localTime;
+    }
+
+    // Fetch weather and update live time
+    document.getElementById('collapseWeather').addEventListener('show.bs.collapse', () => {
+      fetchWeather('Kathmandu', 'weatherNepal');
+      fetchWeather('Amman', 'weatherJordan');
+
+      updateLiveTime('timeNepal', 'Asia/Kathmandu');
+      updateLiveTime('timeJordan', 'Asia/Amman');
+
+      setInterval(() => {
+        updateLiveTime('timeNepal', 'Asia/Kathmandu');
+        updateLiveTime('timeJordan', 'Asia/Amman');
+      }, 1000);
+    });
+  </script>
+</body>
+</html>

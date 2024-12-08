@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Collapse Box with Button and Links</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- FontAwesome for icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+  <style>
+    /* Slow collapse animation */
+    .collapse {
+      transition: height 0.8s ease, opacity 0.8s ease; /* Slow animation */
+    }
+
+    .collapse-box {
+      border-radius: 5px;
+    }
+
+    .btn-collapse {
+      width: 100%;
+      padding: 15px;
+      font-size: 18px;
+      background-color: #088d0a; /* Green */
+      color: white;
+      text-align: left;
+      border: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+
+    .btn-collapse.collapsed {
+      background-color: #dc3545; /* Red when collapsed */
+    }
+
+    .toggle-icon {
+      font-size: 18px;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .collapse-content {
+      padding: 10px;
+      background-color: #088d0a;
+      border-top: 10px solid #088d0a;
+      border-radius: 0 0 5px 5px;
+    }
+
+    .list-group-item {
+      width: 100%;
+    }
+
+    .list-group-item:hover {
+      background-color: #c10303;
+      cursor: pointer;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <div>
+    
+    <div class="collapse-box">
+      <button class="btn-collapse" type="button" data-bs-toggle="collapse" data-bs-target="#collapseexm" aria-expanded="false" aria-controls="collapseexm" id="toggleButton">
+      <strong>Quick Links</strong>
+        <i class="fas fa-chevron-down toggle-icon" id="toggle-icon"></i>
+      </button>
+
+      <div class="collapse" id="collapseexm">
+        <div class="collapse-content">
+          <ul class="list-group">
+            <li class="list-group-item">Item 1</li>
+            <li class="list-group-item">Item 2</li>
+            <li class="list-group-item">Item 3</li>
+            <li class="list-group-item">Item 4</li>
+            <li class="list-group-item">Item 5</li>
+            <li class="list-group-item">Item 6</li>
+            <li class="list-group-item">Item 7</li>
+            <li class="list-group-item">Item 8</li>
+            <li class="list-group-item">Item 9</li>
+            <li class="list-group-item">Item 10</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bootstrap 5 JS and Popper.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+  
+  <script>
+    var collapseElement = document.getElementById('collapseexm');
+    var toggleButton = document.getElementById('toggleButton');
+    var toggleIcon = document.getElementById('toggle-icon');
+
+    collapseElement.addEventListener('show.bs.collapse', function () {
+      toggleIcon.classList.remove('fa-chevron-down');
+      toggleIcon.classList.add('fa-chevron-up');
+      toggleButton.classList.add('collapsed');
+    });
+
+    collapseElement.addEventListener('hide.bs.collapse', function () {
+      toggleIcon.classList.remove('fa-chevron-up');
+      toggleIcon.classList.add('fa-chevron-down');
+      toggleButton.classList.remove('collapsed');
+    });
+  </script>
+</body>
+</html>

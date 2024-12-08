@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Currency Converter</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* Custom styles for the collapse box */
+    .collapse-box {
+      /* border: 2px solid green; */
+      border-radius: 5px;
+      margin-bottom: 0;
+      margin: 0;
+      width: 100%; /* Set width to 100% */
+    }
+
+    .btn-collapse {
+      width: 100%; /* Set button width to 100% */
+      padding: 15px;
+      font-size: 18px;
+      background-color: green;
+      color: white;
+      text-align: left;
+      border: none;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      /* margin-bottom: 10px; */
+      transition: all 0.3s ease;
+    }
+
+    .btn-collapse.collapsed {
+      background-color: #dc3545; /* Red when collapsed */
+    }
+
+    .toggle-icon {
+      font-size: 18px;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .collapse-content {
+      padding: 10px;
+      background-color: green;
+      color: white;
+      border-top: 1px solid #007bff;
+      border-radius: 0 0 5px 5px;
+      width: 100%; /* Set content width to 100% */
+    }
+  </style>
+</head>
+<body>
+
+  <div class=" mt-5" style="width: 100%;">
+
+    <!-- Collapse Box with Button and Currency Converter -->
+    <div class="collapse-box">
+      <!-- Button to Toggle Currency Converter -->
+      <button class="btn-collapse" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCurrency" aria-expanded="false" aria-controls="collapseCurrency" id="toggleButton">
+        Currency Converter
+        <i class="fas fa-chevron-down toggle-icon" id="toggle-icon"></i>
+      </button>
+
+      <!-- Collapse Content for Currency Converter -->
+      <div class="collapse" id="collapseCurrency">
+        <div class="collapse-content">
+          <!-- From Currency Dropdown -->
+          <label for="fromCurrency">From Currency:</label>
+          <select id="fromCurrency" class="form-control">
+            <option value="NPR">Nepali Rupee (NPR)</option>
+            <option value="USD">US Dollar (USD)</option>
+            <option value="INR">Indian Rupee (INR)</option>
+            <option value="EUR">Euro (EUR)</option>
+            <!-- Add other currencies as needed -->
+          </select>
+
+          <br><br>
+
+          <!-- To Currency Dropdown -->
+          <label for="toCurrency">To Currency:</label>
+          <select id="toCurrency" class="form-control">
+            <option value="JOD">Jordanian Dinar (JOD)</option>
+            <option value="USD">US Dollar (USD)</option>
+            <option value="INR">Indian Rupee (INR)</option>
+            <option value="EUR">Euro (EUR)</option>
+            <!-- Add other currencies as needed -->
+          </select>
+
+          <br><br>
+
+          <!-- Amount Input -->
+          <label for="amount">Amount:</label>
+          <input type="number" id="amount" class="form-control" placeholder="Enter amount">
+
+          <br><br>
+
+          <button onclick="convertCurrency()" class="btn btn-primary">Convert</button>
+
+          <h2>Converted Amount: <span id="convertedAmount">0</span></h2>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bootstrap 5 JS and Popper.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+  <!-- FontAwesome for icons (optional, for the chevron icon) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+
+  <script>
+    async function convertCurrency() {
+      var fromCurrency = document.getElementById("fromCurrency").value;
+      var toCurrency = document.getElementById("toCurrency").value;
+      var amount = document.getElementById("amount").value;
+
+      // Google Apps Script URL
+      var scriptUrl = "https://script.google.com/macros/s/AKfycbwl2NKNM0zmFf_SZRtXEuBLWIQkU_ew3YySmrD8VAdy38vX1yXcnN4crZHmvjj-RkgT/exec";
+
+      try {
+        // Call the Google Apps Script function
+        const response = await fetch(`${scriptUrl}?fromCurrency=${fromCurrency}&toCurrency=${toCurrency}&amount=${amount}`);
+        const data = await response.json();
+
+        if (data.convertedAmount) {
+          document.getElementById("convertedAmount").textContent = data.convertedAmount;
+        } else {
+          document.getElementById("convertedAmount").textContent = "Error: " + data.error;
+        }
+
+      } catch (error) {
+        console.error(error);
+        document.getElementById("convertedAmount").textContent = "Error: Unable to fetch conversion data.";
+      }
+    }
+  </script>
+
+</body>
+</html>
