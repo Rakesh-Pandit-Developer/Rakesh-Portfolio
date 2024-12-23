@@ -93,11 +93,34 @@
         .modal-content button:hover {
             background-color: #0056b3;
         }
+        a{
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        header ul{
+            display: flex;
+            text-align: center;
+            justify-content: center;
+            list-style: none;
+        }
+        header a{
+            color: #ddd;
+            font-size: 20px;
+        }
+        header a:hover{
+            color: #b7f5ab;
+        }
     </style>
 </head>
 <body>
     <div class="header">
         <h1>My E-commerce Store</h1>
+        <header>
+            <ul>
+                <li><a href="gallery.html"> Gallery</a></li>
+            </ul>
+        </header>
     </div>
     <div id="products" class="products"></div>
 
